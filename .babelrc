@@ -1,0 +1,22 @@
+{
+  "env": {
+    "rollup": {
+      "presets": [
+        [
+          "es2015",
+          {
+            "modules": false
+          }
+        ],
+        "react"
+      ]
+    }
+    ,
+    "test": {
+      "presets": [
+        "es2015",
+        "react"
+      ]
+    }
+  }
+}
