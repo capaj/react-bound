@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import { isObservable, extendObservable } from 'mobx'
@@ -49,11 +50,15 @@ class Bound extends Component {
   }
   renderChildren (props, state) {
     return React.Children.map(props.children, node => {
+      if (!node) {
+        return node
+      }
       const { props, type } = node
 
       if (nodeTypes.includes(type)) {
         if (!props.name) {
-          console.warn(`node ${node} lacks a name and is not bound`)
+          console.warn(`${type} with props ${JSON.stringify(props)} lacks a name and is not bound`)
+          return node
         }
         if (props.hasOwnProperty('value')) {
           throw new Error(
@@ -65,7 +70,7 @@ class Bound extends Component {
         if (isObservable(state) && value === undefined) {
           // a safe guard when working with mobx state
           throw new TypeError(
-            `state path "${props.name}" lacks a default value`
+            `path "${props.name}" bound to ${type} lacks a default value`
           )
           // const extender = {}
           // set(extender, props.name, '')
@@ -111,6 +116,10 @@ class Bound extends Component {
     const { to } = this.props
     return this.renderChildren(this.props, to)
   }
+}
+
+Bound.propTypes = {
+  to: PropTypes.object.isRequired
 }
 
 export default observer(Bound)
