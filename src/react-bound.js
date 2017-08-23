@@ -66,7 +66,7 @@ class Bound extends Component {
           )
         }
         const value = fromModelToInput(props.type, get(state, props.name))
-        console.log(value)
+        // console.log(value)
         if (isObservable(state) && value === undefined) {
           // a safe guard when working with mobx state
           throw new TypeError(
