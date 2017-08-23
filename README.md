@@ -3,7 +3,7 @@ a react HOC for binding inputs to a model. Model can be a POJO or a mobx observa
 
 It does the same thing as https://facebook.github.io/react/docs/two-way-binding-helpers.html. Links the value from your model to your inputs so that you don't have to wire up every single input manually.
 
-## supported tags types
+## supported html tags
 
 ```
 input
@@ -11,7 +11,7 @@ textarea
 select
 ```
 
-### supported input types
+### supported input element types
 
 ```
 text
@@ -34,7 +34,7 @@ Also to add support for validation to be able to indicate `$valid` and `$invalid
 
 ## Motivation
 
-Main motivation is to escape from handling raw events for forms. For 90% of the form I create, I find that going to the low level and writing event handlers for each of my input is overkill. This probably violates the touted one-way data flow, but I don't care. It works wonders for all the forms I've created so far.
+Main motivation is to escape from handling raw events for forms. For 90% of the forms I create I find that going to the low level and writing event handlers for each of my input is overkill. Having a lib which does this for me save quite a bit of code. This approach probably violates the touted one-way data flow-the great react.js strength, but I don't care. It works well enough for all the forms I've created so far.
 
 ## Usage
 
@@ -51,6 +51,7 @@ const state = observable({
   first: '',
   second: ''
 })
+// in render
 <Bound to={state}>
    <form>
     <label>
@@ -98,7 +99,7 @@ Make sure you initialize your fields, otherwise an error is thrown if your state
 const state = observable({
   unicornInput: ''
 })
-// later
+// in render
 <Bound to={state}>
   <textarea name='unicornInput' />
 </Bound>
