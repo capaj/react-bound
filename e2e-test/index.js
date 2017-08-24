@@ -13,9 +13,10 @@ const state = observable({
   third: '',
   wrapped: 'wrapped value',
   color: '#5c1111',
-  gender: null,
+  gender: null, // radio btns
   number: 10,
   checkbox: true,
+  file: null,
   date: new Date(),
   time: '10:55',
   datetime: new Date(),
@@ -107,12 +108,17 @@ class Test extends Component {
               />
               <label htmlFor='genderChoice2'>Female</label>
             </div>
+            <br />
+            <br />
+            <input name='file' type='file' />
           </form>
         </Bound>
         <Bound to={state}>
           <textarea name='third' />
           <WrappedInput bound='wrapped' />
         </Bound>
+        <br />
+        <br />
         <Bound to={state}>
           <select name='aSelect'>
             <option value='value1'>Value 1</option>

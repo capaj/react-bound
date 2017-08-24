@@ -25,15 +25,13 @@ color
 email
 date
 time
+file
 datetime-local
 number
 ```
 
 ## planned in future versions
-```
-file
-```
-Also inspired by angular form controller I want to add support for validation to be able to indicate `$valid` and `$invalid` on the whole state object. Currently only `$dirty` is added to your state.
+inspired by angular form controller I want to add support for validation to be able to indicate `$valid` and `$invalid` on the whole state object. Currently only `$dirty` is added to your state.
 
 ## Motivation
 

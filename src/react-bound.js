@@ -7,6 +7,7 @@ import { observer } from 'mobx-react'
 import dateformat from 'dateformat'
 
 const nodeTypes = ['input', 'select', 'textarea']
+const ignoredInputTypes = ['reset', 'submit']
 
 const fromInputToModel = (inputType, value) => {
   if (inputType === 'number') return Number(value)
@@ -69,6 +70,8 @@ class Bound extends Component {
 
               if (target.type === 'checkbox') {
                 newValue = target.checked
+              } if (target.type === 'file') {
+                newValue = target.files
               } else {
                 newValue = target.value
               }
@@ -96,6 +99,8 @@ class Bound extends Component {
           } else {
             cloneProps.checked = false
           }
+        } else if (props.type === 'file') {
+          // file input cannot be a controlled
         } else {
           cloneProps.value = value
         }
@@ -105,6 +110,9 @@ class Bound extends Component {
       }
 
       if (nodeTypes.includes(type)) {
+        if (ignoredInputTypes.includes(props.type)) {
+          return node
+        }
         if (!props.name) {
           console.warn(`${type} with props ${JSON.stringify(props)} lacks a name and is not bound`)
           return node
