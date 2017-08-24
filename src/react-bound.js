@@ -4,8 +4,8 @@ import get from 'lodash.get'
 import set from 'lodash.set'
 import { isObservable, extendObservable } from 'mobx'
 import { observer } from 'mobx-react'
-
 import dateformat from 'dateformat'
+
 const nodeTypes = ['input', 'select', 'textarea']
 
 const fromInputToModel = (inputType, value) => {
@@ -132,18 +132,13 @@ class Bound extends Component {
 
   render () {
     const { to } = this.props
-    const children = this.renderChildren(this.props, to)
-    if (children.length === 1) {
-      return children[0]
-    }
-    return <div>
-      {children}
-    </div>
+    return this.renderChildren(this.props, to)
   }
 }
 
 Bound.propTypes = {
-  to: PropTypes.object.isRequired
+  to: PropTypes.object.isRequired,
+  onChange: PropTypes.func
 }
 
 export default observer(Bound)

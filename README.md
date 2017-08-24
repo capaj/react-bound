@@ -49,7 +49,7 @@ Or a whole form:
 const state = observable({
   first: '',
   second: '',
-  $dirty: false // this is added automatically on mount. It will be turned to false when any input is touched-just like in angular
+  $dirty: false // this is added automatically on mount. It will be turned to true when any input is touched-just like in angular
 })
 // in render
 <Bound to={state}>
@@ -99,6 +99,17 @@ So a lot of inputs you use are wrapped in a react component. For example [react-
 ```javascript
 <Bound to={state}>
   <Select bound='unicornInput'/>
+</Bound>
+```
+
+### TBD
+Sometimes you'd get a react warning when you do this-if you do the wrapped element is forwarding the bound prop to the child. If you can't make sure that the prop `bound` is not passed, you'll want to use `<BindElement>` like this to avoid getting the error:
+
+```javascript
+<Bound to={state}>
+  <BindElement>
+    <Select name='unicornInput'/>
+  </BindElement>
 </Bound>
 ```
 
