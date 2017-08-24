@@ -95,7 +95,10 @@ class Test extends Component {
         <br />
         <br />
         <ReactJson src={state} />
+        <br />        
         State: {JSON.stringify(state)}
+        <br />
+        Dirty: {JSON.stringify(state.$dirty)}
       </div>
     )
   }

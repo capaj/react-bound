@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import get from 'lodash.get'
 import set from 'lodash.set'
-import { isObservable, extendObservable } from 'mobx'
+import { isObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import dateformat from 'dateformat'
 
@@ -42,9 +42,12 @@ const fromModelToInput = (inputType, value) => {
 class Bound extends Component {
   componentWillMount () {
     const { to } = this.props
-    if (isObservable(to)) {
-      extendObservable(to, {
-        $dirty: false
+    if (!to.hasOwnProperty('$dirty')) {
+      Object.defineProperty(to, '$dirty', {
+        enumerable: false,
+        configurable: false,
+        writable: true,
+        value: false
       })
     }
   }

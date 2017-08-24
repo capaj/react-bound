@@ -35,6 +35,10 @@ Also inspired by angular form controller I want to add support for validation to
 
 Main motivation is to escape from handling raw events for forms. For 90% of the forms I create I find that going to the low level and writing event handlers for each of my input is overkill. Having a `<Bound>` saves quite a bit of needless code. This approach probably violates the often touted one-way data flow-the great react.js strength, but I don't care. It works well enough for all the forms I've created so far.
 
+## Showcase
+
+To run a showcase, use: `npm run showcase`
+
 ## Usage
 
 You can bound a single input:
