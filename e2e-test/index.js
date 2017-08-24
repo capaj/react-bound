@@ -20,11 +20,13 @@ const state = observable({
   aSelect: 'value2'
 })
 
-const WrappedInput = ({bound, onChange, value}) => {
-  return <div>
-    Wrapped input
-    <input onChange={onChange} value={value} />
-  </div>
+const WrappedInput = ({ bound, onChange, value }) => {
+  return (
+    <div>
+      Wrapped input
+      <input onChange={onChange} value={value} />
+    </div>
+  )
 }
 
 class Test extends Component {
@@ -95,7 +97,7 @@ class Test extends Component {
         <br />
         <br />
         <ReactJson src={state} />
-        <br />        
+        <br />
         State: {JSON.stringify(state)}
         <br />
         Dirty: {JSON.stringify(state.$dirty)}

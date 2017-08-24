@@ -11,7 +11,7 @@
     "showcase": "cd e2e-test && npx webpack-dev-server",
     "build": "BABEL_ENV=rollup rollup -c",
     "clean": "rimraf dist",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build && npm test"
   },
   "repository": {
     "type": "git",
