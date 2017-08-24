@@ -90,6 +90,12 @@ class Bound extends Component {
         }
         if (props.type === 'checkbox') {
           cloneProps.checked = value
+        } else if (props.type === 'radio') {
+          if (props.value === value) {
+            cloneProps.checked = true
+          } else {
+            cloneProps.checked = false
+          }
         } else {
           cloneProps.value = value
         }
@@ -103,7 +109,7 @@ class Bound extends Component {
           console.warn(`${type} with props ${JSON.stringify(props)} lacks a name and is not bound`)
           return node
         }
-        if (props.hasOwnProperty('value')) {
+        if (props.type !== 'radio' && props.hasOwnProperty('value')) {
           throw new Error(
             'value prop should not be set for bound elements'
           )

@@ -13,6 +13,7 @@ const state = observable({
   third: '',
   wrapped: 'wrapped value',
   color: '#5c1111',
+  gender: null,
   number: 10,
   checkbox: true,
   date: new Date(),
@@ -89,6 +90,23 @@ class Test extends Component {
               datetime-local input
               <input type='datetime-local' name='datetime' />
             </label>
+            <div>
+              Gender choice
+              <input
+                type='radio'
+                id='genderChoice1'
+                name='gender'
+                value='male'
+              />
+              <label htmlFor='genderChoice1'>Male</label>
+              <input
+                type='radio'
+                id='genderChoice2'
+                name='gender'
+                value='female'
+              />
+              <label htmlFor='genderChoice2'>Female</label>
+            </div>
           </form>
         </Bound>
         <Bound to={state}>

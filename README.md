@@ -18,6 +18,8 @@ select
 text
 url
 search
+checkbox
+radio
 password
 color
 email
