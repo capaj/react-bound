@@ -11,6 +11,7 @@ const state = observable({
   },
   second: '',
   third: '',
+  wrapped: 'wrapped value',
   color: '#5c1111',
   number: 10,
   date: new Date(),
@@ -18,6 +19,13 @@ const state = observable({
   datetime: new Date(),
   aSelect: 'value2'
 })
+
+const WrappedInput = ({bound, onChange, value}) => {
+  return <div>
+    Wrapped input
+    <input onChange={onChange} value={value} />
+  </div>
+}
 
 class Test extends Component {
   render () {
@@ -75,6 +83,7 @@ class Test extends Component {
         </Bound>
         <Bound to={state}>
           <textarea name='third' />
+          <WrappedInput bound='wrapped' />
         </Bound>
         <Bound to={state}>
           <select name='aSelect'>

@@ -92,6 +92,16 @@ const state = observable({
 </Bound>
 ```
 
+## With inputs wrapped in custom elements
+
+So a lot of inputs you use are wrapped in a react component. For example [react-select](https://github.com/JedWatson/react-select). To bind these, you can utilize a `bound` prop on any element which accepts a `value` and `onChange` handler. Example:
+
+```javascript
+<Bound to={state}>
+  <Select bound='unicornInput'/>
+</Bound>
+```
+
 ## With mobx
 Make sure you initialize your fields, otherwise an error is thrown if your state is mobx observable.
 
