@@ -1,6 +1,5 @@
 # react-bound
-a react HOC for binding inputs to a model. Model can be a POJO or a mobx observable. Inspired by angular form controller.
-
+a react HOC for binding inputs to a model. Model can be a POJO or a mobx observable.
 It does the same thing as https://facebook.github.io/react/docs/two-way-binding-helpers.html. Links the value from your model to your inputs so that you don't have to wire up every single input manually.
 
 ## supported html tags
@@ -30,7 +29,7 @@ number
 ```
 file
 ```
-Also to add support for validation to be able to indicate `$valid` and `$invalid` on the whole state object
+Also inspired by angular form controller I want to add support for validation to be able to indicate `$valid` and `$invalid` on the whole state object. Currently only `$dirty` is added to your state.
 
 ## Motivation
 
@@ -49,7 +48,8 @@ Or a whole form:
 ```javascript
 const state = observable({
   first: '',
-  second: ''
+  second: '',
+  $dirty: false // this is added automatically on mount. It will be turned to false when any input is touched-just like in angular
 })
 // in render
 <Bound to={state}>
@@ -71,7 +71,7 @@ const state = observable({
    <form>
 </Bound>
 ```
-All you have to do is match the name of input to the property in your state.
+All you have to do is match the name of input to the property in your state. The React element tree is recursively traversed, so even if you hide the input 20 layers deep, it will still hook it up.
 
 You can bind multiple forms inside a single `Bound` element, but I'd advise you to at least namespace your inputs, so that your model remains somewhat tidy.
 For example:

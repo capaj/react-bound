@@ -50,9 +50,6 @@ class Bound extends Component {
   }
   renderChildren (props, state) {
     return React.Children.map(props.children, node => {
-      if (!node) {
-        return node
-      }
       const { props, type } = node
 
       if (nodeTypes.includes(type)) {
@@ -114,7 +111,13 @@ class Bound extends Component {
 
   render () {
     const { to } = this.props
-    return this.renderChildren(this.props, to)
+    const children = this.renderChildren(this.props, to)
+    if (children.length === 1) {
+      return children[0]
+    }
+    return <div>
+      {children}
+    </div>
   }
 }
 
