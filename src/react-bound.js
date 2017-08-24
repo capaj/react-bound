@@ -50,13 +50,21 @@ class Bound extends Component {
   }
   renderChildren (props, state) {
     return React.Children.map(props.children, node => {
+      if (!node) {
+        return null
+      }
       const { props, type } = node
 
       const hookOnChangeAndClone = (value, statePropPath) => {
         const originalOnChange = props.onChange
         const cloneProps = {
-          onChange: ev => {
-            const castedValue = fromInputToModel(props.type, ev.target.value)
+          onChange: newValueOrEvent => {  // custom onChange events are usually just passing the value directly as first param
+            let newValue = newValueOrEvent
+            if (newValueOrEvent.target && newValueOrEvent.target.hasOwnProperty('value')) {
+              // this is a DOM event proxy
+              newValue = newValueOrEvent.target.value
+            }
+            const castedValue = fromInputToModel(props.type, newValue)
             const setValue = () => {
               state.$dirty = true
               set(state, statePropPath, castedValue)
@@ -64,7 +72,7 @@ class Bound extends Component {
             if (!originalOnChange) {
               return setValue()
             }
-            const eventHandlerResult = originalOnChange(ev)
+            const eventHandlerResult = originalOnChange(newValueOrEvent)
             if (eventHandlerResult !== false) {
               setValue()
             }

@@ -1,6 +1,6 @@
 {
   "name": "react-bound",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "a HOC for data-binding an input to a model-it can be a POJO or a mobx observable",
   "main": "dist/react-bound.cjs.js",
   "module": "dist/react-bound.es.js",
