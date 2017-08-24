@@ -63,7 +63,7 @@ class Bound extends Component {
         const cloneProps = {
           onChange: newValueOrEvent => {  // custom onChange events are usually just passing the value directly as first param
             let newValue = newValueOrEvent
-            if (newValueOrEvent.target && newValueOrEvent.target.hasOwnProperty('value')) {
+            if (newValueOrEvent && newValueOrEvent.target && newValueOrEvent.target.hasOwnProperty('value')) {
               // this is a DOM event proxy
               newValue = newValueOrEvent.target.value
             }
