@@ -2,6 +2,8 @@
 a react HOC for binding inputs to a model. Model can be a POJO or a mobx observable.
 It does the same thing as https://facebook.github.io/react/docs/two-way-binding-helpers.html. Links the value from your model to your inputs so that you don't have to wire up every single input manually.
 
+![showcase login form](https://raw.githubusercontent.com/capaj/react-bound/master/img/showcase-login-form.gif)
+
 ## supported html tags
 
 ```
