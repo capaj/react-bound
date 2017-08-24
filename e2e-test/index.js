@@ -14,6 +14,7 @@ const state = observable({
   wrapped: 'wrapped value',
   color: '#5c1111',
   number: 10,
+  checkbox: true,
   date: new Date(),
   time: '10:55',
   datetime: new Date(),
@@ -55,6 +56,13 @@ class Test extends Component {
             <label>
               number input
               <input type='number' name='number' />
+            </label>
+            <br />
+            <br />
+
+            <label>
+              checkbox input
+              <input name='checkbox' type='checkbox' />
             </label>
             <br />
             <br />

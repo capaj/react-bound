@@ -65,7 +65,13 @@ class Bound extends Component {
             let newValue = newValueOrEvent
             if (newValueOrEvent && typeof newValueOrEvent.target === 'object') {
               // this is a DOM event proxy
-              newValue = newValueOrEvent.target.value
+              const {target} = newValueOrEvent
+
+              if (target.type === 'checkbox') {
+                newValue = target.checked
+              } else {
+                newValue = target.value
+              }
             }
             const castedValue = fromInputToModel(props.type, newValue)
             const setValue = () => {
@@ -80,8 +86,12 @@ class Bound extends Component {
               setValue()
             }
             return eventHandlerResult
-          },
-          value
+          }
+        }
+        if (props.type === 'checkbox') {
+          cloneProps.checked = value
+        } else {
+          cloneProps.value = value
         }
 
         const clonedElement = React.cloneElement(node, cloneProps)
@@ -99,7 +109,7 @@ class Bound extends Component {
           )
         }
         const value = get(state, props.name)
-        // console.log(value)
+
         if (isObservable(state) && value === undefined) {
           // a safe guard when working with mobx state
           throw new TypeError(
