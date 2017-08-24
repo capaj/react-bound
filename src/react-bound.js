@@ -52,7 +52,7 @@ class Bound extends Component {
     }
   }
   renderChildren (props, state) {
-    return React.Children.map(props.children, node => {
+    const hookNode = node => {
       if (!node) {
         return null
       }
@@ -63,7 +63,7 @@ class Bound extends Component {
         const cloneProps = {
           onChange: newValueOrEvent => {  // custom onChange events are usually just passing the value directly as first param
             let newValue = newValueOrEvent
-            if (newValueOrEvent && newValueOrEvent.target && newValueOrEvent.target.hasOwnProperty('value')) {
+            if (newValueOrEvent && typeof newValueOrEvent.target === 'object') {
               // this is a DOM event proxy
               newValue = newValueOrEvent.target.value
             }
@@ -138,7 +138,11 @@ class Bound extends Component {
 
         return node
       }
-    })
+    }
+    if (Array.isArray(props.children)) {
+      return React.Children.map(props.children, hookNode)
+    }
+    return hookNode(props.children)
   }
 
   render () {
