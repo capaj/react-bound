@@ -36,7 +36,12 @@ class Test extends Component {
   render () {
     return (
       <div>
-        <Bound to={state}>
+        <Bound
+          to={state}
+          onChange={(val, path, newValue) => {
+            console.log('on change is called', path, newValue)
+          }}
+        >
           <form role='form'>
             <label>
               First

@@ -62,15 +62,16 @@ class Bound extends Component {
       const hookOnChangeAndClone = (value, statePropPath) => {
         const originalOnChange = props.onChange
         const cloneProps = {
-          onChange: newValueOrEvent => {  // custom onChange events are usually just passing the value directly as first param
+          onChange: newValueOrEvent => {
+            // custom onChange events are usually just passing the value directly as first param
             let newValue = newValueOrEvent
             if (newValueOrEvent && typeof newValueOrEvent.target === 'object') {
               // this is a DOM event proxy
-              const {target} = newValueOrEvent
+              const { target } = newValueOrEvent
 
               if (target.type === 'checkbox') {
                 newValue = target.checked
-              } if (target.type === 'file') {
+              } else if (target.type === 'file') {
                 newValue = target.files
               } else {
                 newValue = target.value
@@ -80,6 +81,8 @@ class Bound extends Component {
             const setValue = () => {
               state.$dirty = true
               set(state, statePropPath, castedValue)
+              this.props.onChange &&
+                this.props.onChange(state, statePropPath, castedValue)
             }
             if (!originalOnChange) {
               return setValue()
@@ -114,13 +117,13 @@ class Bound extends Component {
           return node
         }
         if (!props.name) {
-          console.warn(`${type} with props ${JSON.stringify(props)} lacks a name and is not bound`)
+          console.warn(
+            `${type} with props ${JSON.stringify(props)} lacks a name and is not bound`
+          )
           return node
         }
         if (props.type !== 'radio' && props.hasOwnProperty('value')) {
-          throw new Error(
-            'value prop should not be set for bound elements'
-          )
+          throw new Error('value prop should not be set for bound elements')
         }
         const value = get(state, props.name)
 
@@ -139,9 +142,7 @@ class Bound extends Component {
         if (props) {
           if (props.bound) {
             if (props.hasOwnProperty('value')) {
-              throw new Error(
-                'value prop should not be set for bound elements'
-              )
+              throw new Error('value prop should not be set for bound elements')
             }
 
             const value = get(state, props.bound)

@@ -111,6 +111,14 @@ So a lot of inputs you use are wrapped in a react component. For example [react-
 </Bound>
 ```
 
+## Props
+
+### to
+a reference to s state object
+
+### onChange
+is called for any change in the state object. Callback is called with 3 params: state, statePropPath, castedValue
+
 ### TBD
 Sometimes you'd get a react warning when you do this-if you do the wrapped element is forwarding the bound prop to the child. If you can't make sure that the prop `bound` is not passed, you'll want to use `<BindElement>` like this to avoid getting the error:
 
