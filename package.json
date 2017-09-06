@@ -6,7 +6,7 @@
   "module": "dist/react-bound.es.js",
   "scripts": {
     "test": "BABEL_ENV=test ava",
-    "pretest": "node_modules/.bin/standard",
+    "pretest": "node_modules/.bin/standard --fix",
     "precommit": "npm test",
     "showcase": "cd e2e-test && npx webpack-dev-server",
     "build": "BABEL_ENV=rollup rollup -c",
