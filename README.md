@@ -33,8 +33,12 @@ datetime-local
 number
 ```
 
-## planned in future versions
-inspired by angular form controller I want to add support for validation to be able to indicate `$valid` and `$invalid` on the whole state object. Currently only `$dirty` is added to your state.
+## parasitic API
+Currently these are added to your state:
+- `$dirty` boolean flag indicating if any of the bound inputs had any change event
+- `$reset()` this reverts your state object to the state it was in when `<Bound>` mounted
+
+Also inspired by angular form controller I want to add support for validation to be able to indicate `$valid` and `$invalid` on the whole state object.
 
 ## Motivation
 
