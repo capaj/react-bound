@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import get from 'lodash.get'
 import set from 'lodash.set'
+import cloneDeep from 'lodash.clonedeep'
+import merge from 'lodash.merge'
 import { isObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import dateformat from 'dateformat'
@@ -50,6 +52,13 @@ class Bound extends Component {
         writable: true,
         value: false
       })
+    }
+    if (!to.hasOwnProperty('$reset')) {
+      const cleanState = cloneDeep(to)
+      to.$reset = () => {
+        merge(to, cleanState)
+        to.$dirty = false
+      }
     }
   }
   renderChildren (props, state) {
@@ -118,7 +127,9 @@ class Bound extends Component {
         }
         if (!props.name) {
           console.warn(
-            `${type} with props ${JSON.stringify(props)} lacks a name and is not bound`
+            `${type} with props ${JSON.stringify(
+              props
+            )} lacks a name and is not bound`
           )
           return node
         }

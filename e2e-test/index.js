@@ -22,7 +22,7 @@ const state = observable({
   datetime: new Date(),
   aSelect: 'value2'
 })
-
+window.state = state
 const WrappedInput = ({ bound, onChange, value }) => {
   return (
     <div>
@@ -131,6 +131,13 @@ class Test extends Component {
             <option value='value3'>Value 3</option>
           </select>
         </Bound>
+        <button
+          onClick={() => {
+            state.$reset()
+          }}
+        >
+          reset to initial state
+        </button>
         <br />
         <br />
         <ReactJson src={state} />
