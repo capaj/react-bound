@@ -4,7 +4,7 @@ import get from 'lodash.get'
 import set from 'lodash.set'
 import cloneDeep from 'lodash.clonedeep'
 import merge from 'lodash.merge'
-import { isObservable } from 'mobx'
+import { isObservable, toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import dateformat from 'dateformat'
 
@@ -43,7 +43,7 @@ const fromModelToInput = (inputType, value) => {
 }
 
 class Bound extends Component {
-  componentWillMount () {
+  componentWillMount() {
     const { to } = this.props
     if (!to.hasOwnProperty('$dirty')) {
       Object.defineProperty(to, '$dirty', {
@@ -54,14 +54,19 @@ class Bound extends Component {
       })
     }
     if (!to.hasOwnProperty('$reset')) {
-      const cleanState = cloneDeep(to)
+      let cleanState
+      if (isObservable(to)) {
+        cleanState = toJS(to)
+      } else {
+        cleanState = cloneDeep(to)
+      }
       to.$reset = () => {
         merge(to, cleanState)
         to.$dirty = false
       }
     }
   }
-  renderChildren (props, state) {
+  renderChildren(props, state) {
     const hookNode = node => {
       if (!node) {
         return null
@@ -181,7 +186,7 @@ class Bound extends Component {
     return hookNode(props.children)
   }
 
-  render () {
+  render() {
     const { to } = this.props
     return this.renderChildren(this.props, to)
   }
