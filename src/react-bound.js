@@ -43,7 +43,7 @@ const fromModelToInput = (inputType, value) => {
 }
 
 class Bound extends Component {
-  componentWillMount() {
+  componentWillMount () {
     const { to } = this.props
     if (!to.hasOwnProperty('$dirty')) {
       Object.defineProperty(to, '$dirty', {
@@ -66,7 +66,7 @@ class Bound extends Component {
       }
     }
   }
-  renderChildren(props, state) {
+  renderChildren (props, state) {
     const hookNode = node => {
       if (!node) {
         return null
@@ -186,7 +186,7 @@ class Bound extends Component {
     return hookNode(props.children)
   }
 
-  render() {
+  render () {
     const { to } = this.props
     return this.renderChildren(this.props, to)
   }
