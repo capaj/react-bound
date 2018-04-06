@@ -45,6 +45,7 @@ const fromModelToInput = (inputType, value) => {
 class Bound extends Component {
   componentWillMount () {
     const { to } = this.props
+    // TODO save to weakmap
     if (!to.hasOwnProperty('$dirty')) {
       Object.defineProperty(to, '$dirty', {
         enumerable: false,
@@ -66,7 +67,7 @@ class Bound extends Component {
       }
     }
   }
-  renderChildren (props, state) {
+  renderAndHookChildren (props, state) {
     const hookNode = node => {
       if (!node) {
         return null
@@ -173,7 +174,7 @@ class Bound extends Component {
           return React.createElement(
             type,
             props,
-            this.renderChildren(props, state)
+            this.renderAndHookChildren(props, state)
           )
         }
 
@@ -188,7 +189,9 @@ class Bound extends Component {
 
   render () {
     const { to } = this.props
-    return this.renderChildren(this.props, to)
+    // have a weakmap with all backing fields for dirty and reset
+    const children = this.props.children(dirty, reset)
+    return this.renderAndHookChildren(this.props, to, children)
   }
 }
 
