@@ -125,26 +125,30 @@ class Test extends Component {
         <br />
         <br />
         <Bound to={state}>
-          <select name='aSelect'>
-            <option value='value1'>Value 1</option>
-            <option value='value2'>Value 2</option>
-            <option value='value3'>Value 3</option>
-          </select>
-        </Bound>
-        <button
-          onClick={() => {
-            state.$reset()
-          }}
-        >
+          {(dirty, reset) => {
+            return <div>
+              <select name='aSelect'>
+                <option value='value1'>Value 1</option>
+                <option value='value2'>Value 2</option>
+                <option value='value3'>Value 3</option>
+              </select>
+              <br />
+              <button
+                onClick={reset}
+              >
           reset to initial state
-        </button>
-        <br />
+              </button>
+              <br />
+        Dirty: {JSON.stringify(dirty)}
+            </div>
+          }}
+        </Bound>
+
         <br />
         <ReactJson src={state} />
         <br />
         State: {JSON.stringify(state)}
-        <br />
-        Dirty: {JSON.stringify(state.$dirty)}
+
       </div>
     )
   }
