@@ -160,6 +160,10 @@ const state = observable({
 </Bound>
 ```
 
+## formsExtraState
+
+In raw cases you might need to be able to get the state for `dirty` and `reset` imperatively. In those cases, just `import {formsExtraState} from 'react-bound'` and you should be able to get any form state from it
+
 ## Browser compatibility
 
 Any browser with a Weakmap will do.

@@ -1,16 +1,23 @@
-import React, { Component } from 'react'
+import React, {
+  Component
+} from 'react'
 import PropTypes from 'prop-types'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import cloneDeep from 'lodash.clonedeep'
 import merge from 'lodash.merge'
-import { isObservable, toJS } from 'mobx'
-import { observer } from 'mobx-react'
+import {
+  isObservable,
+  toJS
+} from 'mobx'
+import {
+  observer
+} from 'mobx-react'
 import dateformat from 'dateformat'
 
 const nodeTypes = ['input', 'select', 'textarea']
 const ignoredInputTypes = ['reset', 'submit']
-const formExtraStates = new WeakMap()
+export const formsExtraState = new WeakMap()
 
 const fromInputToModel = (inputType, value) => {
   if (inputType === 'number') return Number(value)
@@ -44,9 +51,11 @@ const fromModelToInput = (inputType, value) => {
 }
 
 class Bound extends Component {
-  getExtraState () {
-    const { to } = this.props
-    let extraState = formExtraStates.get(to)
+  getExtraState() {
+    const {
+      to
+    } = this.props
+    let extraState = formsExtraState.get(to)
     if (!extraState) {
       extraState = {
         reset: () => {
@@ -62,23 +71,26 @@ class Bound extends Component {
       } else {
         extraState.cleanState = cloneDeep(to)
       }
-      formExtraStates.set(to, extraState)
+      formsExtraState.set(to, extraState)
     } else {
       extraState.instances.push(this)
     }
     return extraState
   }
-  componentWillUnmount () {
-    const extraState = formExtraStates.get(this.props.to)
+  componentWillUnmount() {
+    const extraState = formsExtraState.get(this.props.to)
     extraState.instances.splice(extraState.instances.indexOf(this), 1)
   }
 
-  renderAndHookChildren (props, state, first) {
+  renderAndHookChildren(props, state, first) {
     const hookNode = node => {
       if (!node) {
         return null
       }
-      const { props, type } = node
+      const {
+        props,
+        type
+      } = node
 
       const hookOnChangeAndClone = (value, statePropPath) => {
         const originalOnChange = props.onChange
@@ -88,7 +100,9 @@ class Bound extends Component {
             let newValue = newValueOrEvent
             if (newValueOrEvent && typeof newValueOrEvent.target === 'object') {
               // this is a DOM event proxy
-              const { target } = newValueOrEvent
+              const {
+                target
+              } = newValueOrEvent
 
               if (target.type === 'checkbox') {
                 newValue = target.checked
@@ -100,7 +114,7 @@ class Bound extends Component {
             }
             const castedValue = fromInputToModel(props.type, newValue)
             const setValue = () => {
-              const extraState = formExtraStates.get(state)
+              const extraState = formsExtraState.get(state)
 
               if (!extraState.dirty) {
                 extraState.dirty = true
@@ -190,7 +204,9 @@ class Bound extends Component {
         return node
       }
     }
-    let { children } = props
+    let {
+      children
+    } = props
     if (first && typeof children === 'function') {
       let extraState = this.getExtraState()
 
@@ -202,8 +218,10 @@ class Bound extends Component {
     return hookNode(children)
   }
 
-  render () {
-    const { to } = this.props
+  render() {
+    const {
+      to
+    } = this.props
 
     return this.renderAndHookChildren(this.props, to, true)
   }
