@@ -5,8 +5,6 @@ With react-bound you can forget what property of an `event.target` carries the a
 
 ![showcase login form](https://raw.githubusercontent.com/capaj/react-bound/master/img/showcase-login-form.gif)
 
-Only supports react 16 because I don't want `<Bound />` to introduce extra wrapping elements into the DOM when 16 is just around the corner.  
-
 ## supported html tags
 
 ```
@@ -33,16 +31,16 @@ datetime-local
 number
 ```
 
-## parasitic API
-Currently these are added to your state:
-- `$dirty` boolean flag indicating if any of the bound inputs had any change event
-- `$reset()` this reverts your state object to the state it was in when `<Bound>` mounted
+## form extra API
+Currently you get 2 arguments available for your children callback:
+- `dirty` boolean flag indicating if any of the bound inputs had any change event
+- `reset()` this function reverts your state object to the state it was in when `<Bound>` rendered first
 
-Also inspired by angular form controller I want to add support for validation to be able to indicate `$valid` and `$invalid` on the whole state object.
+Also inspired by angular form controller I want to add support for validation to be able to indicate `valid` and `invalid` on the whole state object.
 
 ## Motivation
 
-Main motivation is to escape from handling raw events for forms. For 90% of the forms I create I find that going to the low level and writing event handlers for each of my input is overkill. Having a `<Bound>` saves quite a bit of needless code. This approach probably violates the often touted one-way data flow-the great react.js strength, but I don't care. It works well enough for all the forms I've created so far.
+Main motivation is to avoid handling raw events for each input. Having a `<Bound>` saves quite a bit of code. This approach violates the often touted one-way data flow-the great react.js strength, but I don't really care. It works well enough for all the forms I've created with it so far.
 
 ## Showcase
 
@@ -62,7 +60,6 @@ Or a whole form:
 const state = observable({
   first: '',
   second: '',
-  $dirty: false // this is added automatically on mount. It will be turned to true when any input is touched-just like in angular
 })
 // in render
 <Bound to={state}>
@@ -115,6 +112,22 @@ So a lot of inputs you use are wrapped in a react component. For example [react-
 </Bound>
 ```
 
+## Children as function
+By using function a direct child, you can get `dirty` and `reset` form utils. These utils are backed by a Weakmap-so if you have multiple <Bound/> elements where `to` is the same, `dirty` will be changed to true if any of the two forms is touched.
+
+```javascript
+<Bound to={state}>
+  {(dirty, reset) => {
+    <textarea name='a' />
+    <textarea name='b' />
+    <span>has been touched: {dirty}</span>
+    <button onClick={reset}>
+      reset form
+    </button>
+  }}
+</Bound>
+```
+
 ## Props
 
 ### to
@@ -146,3 +159,7 @@ const state = observable({
   <textarea name='unicornInput' />
 </Bound>
 ```
+
+## Browser compatibility
+
+Any browser with a Weakmap will do.

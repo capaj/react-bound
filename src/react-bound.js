@@ -10,6 +10,7 @@ import dateformat from 'dateformat'
 
 const nodeTypes = ['input', 'select', 'textarea']
 const ignoredInputTypes = ['reset', 'submit']
+const formExtraStates = new WeakMap()
 
 const fromInputToModel = (inputType, value) => {
   if (inputType === 'number') return Number(value)
@@ -43,30 +44,36 @@ const fromModelToInput = (inputType, value) => {
 }
 
 class Bound extends Component {
-  componentWillMount () {
+  getExtraState () {
     const { to } = this.props
-    if (!to.hasOwnProperty('$dirty')) {
-      Object.defineProperty(to, '$dirty', {
-        enumerable: false,
-        configurable: false,
-        writable: true,
-        value: false
-      })
-    }
-    if (!to.hasOwnProperty('$reset')) {
-      let cleanState
+    let extraState = formExtraStates.get(to)
+    if (!extraState) {
+      extraState = {
+        reset: () => {
+          merge(to, extraState.cleanState)
+          extraState.dirty = false
+          extraState.instances.forEach((instance) => instance.forceUpdate())
+        },
+        dirty: false,
+        instances: [this]
+      }
       if (isObservable(to)) {
-        cleanState = toJS(to)
+        extraState.cleanState = toJS(to)
       } else {
-        cleanState = cloneDeep(to)
+        extraState.cleanState = cloneDeep(to)
       }
-      to.$reset = () => {
-        merge(to, cleanState)
-        to.$dirty = false
-      }
+      formExtraStates.set(to, extraState)
+    } else {
+      extraState.instances.push(this)
     }
+    return extraState
   }
-  renderChildren (props, state) {
+  componentWillUnmount () {
+    const extraState = formExtraStates.get(this.props.to)
+    extraState.instances.splice(extraState.instances.indexOf(this), 1)
+  }
+
+  renderAndHookChildren (props, state, first) {
     const hookNode = node => {
       if (!node) {
         return null
@@ -93,10 +100,16 @@ class Bound extends Component {
             }
             const castedValue = fromInputToModel(props.type, newValue)
             const setValue = () => {
-              state.$dirty = true
+              const extraState = formExtraStates.get(state)
+
+              if (!extraState.dirty) {
+                extraState.dirty = true
+                extraState.instances.forEach((instance) => instance.forceUpdate())
+              }
+
               set(state, statePropPath, castedValue)
-              this.props.onChange &&
-                this.props.onChange(state, statePropPath, castedValue)
+              props.onChange &&
+                props.onChange(state, statePropPath, castedValue)
             }
             if (!originalOnChange) {
               return setValue()
@@ -139,7 +152,7 @@ class Bound extends Component {
           return node
         }
         if (props.type !== 'radio' && props.hasOwnProperty('value')) {
-          throw new Error('value prop should not be set for bound elements')
+          throw new Error(`value prop cannot be set for bound elements, yet it is value="${props.value}" for ${type}`)
         }
         const value = get(state, props.name)
 
@@ -148,9 +161,6 @@ class Bound extends Component {
           throw new TypeError(
             `path "${props.name}" bound to ${type} lacks a default value`
           )
-          // const extender = {}
-          // set(extender, props.name, '')
-          // extendObservable(state, extender) // fro some reason this won't work
         }
         const castedInputValue = fromModelToInput(props.type, value)
         return hookOnChangeAndClone(castedInputValue, props.name)
@@ -173,22 +183,29 @@ class Bound extends Component {
           return React.createElement(
             type,
             props,
-            this.renderChildren(props, state)
+            this.renderAndHookChildren(props, state)
           )
         }
 
         return node
       }
     }
-    if (Array.isArray(props.children)) {
-      return React.Children.map(props.children, hookNode)
+    let { children } = props
+    if (first && typeof children === 'function') {
+      let extraState = this.getExtraState()
+
+      children = children(extraState.dirty, extraState.reset)
     }
-    return hookNode(props.children)
+    if (Array.isArray(children)) {
+      return React.Children.map(children, hookNode)
+    }
+    return hookNode(children)
   }
 
   render () {
     const { to } = this.props
-    return this.renderChildren(this.props, to)
+
+    return this.renderAndHookChildren(this.props, to, true)
   }
 }
 
