@@ -117,11 +117,16 @@ By using function a direct child, you can get `dirty` and `reset` form utils. Th
 
 ```javascript
 <Bound to={state}>
-  {(dirty, reset) => {
+  {({dirty, reset, set}) => {
     <textarea name='a' />
     <textarea name='b' />
     <span>has been touched: {dirty}</span>
     <button onClick={reset}>
+      reset form
+    </button>
+     <button onClick={() => {
+       set('a', 1)  // sets a value to model programatically
+     }}>
       reset form
     </button>
   }}

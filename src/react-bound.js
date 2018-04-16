@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import cloneDeep from 'lodash.clonedeep'
-import merge from 'lodash.merge'
+
 import {
   isObservable,
   toJS
@@ -51,7 +51,7 @@ const fromModelToInput = (inputType, value) => {
 }
 
 class Bound extends Component {
-  getExtraState() {
+  getExtraState () {
     const {
       to
     } = this.props
@@ -59,9 +59,26 @@ class Bound extends Component {
     if (!extraState) {
       extraState = {
         reset: () => {
-          merge(to, extraState.cleanState)
+          Object.assign(to, extraState.cleanState)
+          Object.keys(to).forEach((key) => {
+            if (!extraState.cleanState.hasOwnProperty(key)) {
+              delete to[key]
+            }
+          })
           extraState.dirty = false
           extraState.instances.forEach((instance) => instance.forceUpdate())
+        },
+        /*
+          @path string
+          @value Any
+        */
+        set: (...args) => {
+          if (!extraState.dirty) {
+            extraState.dirty = true
+            extraState.instances.forEach((instance) => instance.forceUpdate())
+          }
+
+          set(to, ...args)
         },
         dirty: false,
         instances: [this]
@@ -77,12 +94,12 @@ class Bound extends Component {
     }
     return extraState
   }
-  componentWillUnmount() {
+  componentWillUnmount () {
     const extraState = formsExtraState.get(this.props.to)
     extraState.instances.splice(extraState.instances.indexOf(this), 1)
   }
 
-  renderAndHookChildren(props, state, first) {
+  renderAndHookChildren (props, state, first) {
     const hookNode = node => {
       if (!node) {
         return null
@@ -210,7 +227,7 @@ class Bound extends Component {
     if (first && typeof children === 'function') {
       let extraState = this.getExtraState()
 
-      children = children(extraState.dirty, extraState.reset)
+      children = children(extraState) // add a third
     }
     if (Array.isArray(children)) {
       return React.Children.map(children, hookNode)
@@ -218,7 +235,7 @@ class Bound extends Component {
     return hookNode(children)
   }
 
-  render() {
+  render () {
     const {
       to
     } = this.props

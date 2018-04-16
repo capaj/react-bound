@@ -125,7 +125,7 @@ class Test extends Component {
         <br />
         <br />
         <Bound to={state}>
-          {(dirty, reset) => {
+          {({ dirty, reset, set }) => {
             return <div>
               <select name='aSelect'>
                 <option value='value1'>Value 1</option>
@@ -137,6 +137,13 @@ class Test extends Component {
                 onClick={reset}
               >
           reset to initial state
+              </button>
+              <button
+                onClick={() => {
+                  set('second', 'aaa')
+                }}
+              >
+          set test
               </button>
               <br />
         Dirty: {JSON.stringify(dirty)}
