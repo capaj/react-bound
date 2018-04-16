@@ -32,9 +32,10 @@ number
 ```
 
 ## form extra API
-Currently you get 2 arguments available for your children callback:
+Currently you get an object available for your children callback with these props:
 - `dirty` boolean flag indicating if any of the bound inputs had any change event
-- `reset()` this function reverts your state object to the state it was in when `<Bound>` rendered first
+- `reset` this function reverts your state object to the state it was in when `<Bound>` rendered first
+- `set` this function sets a property on your state to the supplied value and changes dirty from false to true
 
 Also inspired by angular form controller I want to add support for validation to be able to indicate `valid` and `invalid` on the whole state object.
 
@@ -113,22 +114,24 @@ So a lot of inputs you use are wrapped in a react component. For example [react-
 ```
 
 ## Children as function
-By using function a direct child, you can get `dirty` and `reset` form utils. These utils are backed by a Weakmap-so if you have multiple <Bound/> elements where `to` is the same, `dirty` will be changed to true if any of the two forms is touched.
+By using function a direct child, you can get `dirty`, `reset` and `set` form utils. These utils are backed by a Weakmap-so if you have multiple <Bound/> elements where `to` is the same, `dirty` will be changed to true if any of the two forms is touched.
 
 ```javascript
 <Bound to={state}>
   {({dirty, reset, set}) => {
-    <textarea name='a' />
-    <textarea name='b' />
-    <span>has been touched: {dirty}</span>
-    <button onClick={reset}>
-      reset form
-    </button>
-     <button onClick={() => {
-       set('a', 1)  // sets a value to model programatically
-     }}>
-      reset form
-    </button>
+    return <div>
+      <textarea name='a' />
+      <textarea name='b' />
+      <span>has been touched: {dirty}</span>
+      <button onClick={reset}>
+        reset form
+      </button>
+      <button onClick={() => {
+        set('a', 1)  // sets a value to model programatically-same as doin a = 1 but "dirty" gets switched
+      }}>
+        reset form
+      </button>
+    </div>
   }}
 </Bound>
 ```
