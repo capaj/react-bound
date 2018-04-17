@@ -1,5 +1,5 @@
 # react-bound
-a react HOC for binding inputs to a model. Model can be a POJO or a mobx observable.
+a react utility component for binding inputs to a model. Model can be a POJO or a mobx observable.
 It does the same thing as https://facebook.github.io/react/docs/two-way-binding-helpers.html. Links the value from your model to your inputs so that you don't have to wire up every single input manually.
 With react-bound you can forget what property of an `event.target` carries the actual value. No matter if it's a checkbox, radio or a file input. All of the DOM api quirks are hardcoded in react-bound and you get the actual values laid out into your model.
 
