@@ -51,7 +51,8 @@ const fromModelToInput = (inputType, value) => {
 }
 
 class Bound extends Component {
-  getExtraState () {
+  getExtraState() {
+
     const {
       to
     } = this.props
@@ -141,6 +142,7 @@ class Bound extends Component {
               set(state, statePropPath, castedValue)
               props.onChange &&
                 props.onChange(state, statePropPath, castedValue)
+              this.stateOnChange && this.stateOnChange(state, statePropPath, castedValue)
             }
             if (!originalOnChange) {
               return setValue()
@@ -224,8 +226,9 @@ class Bound extends Component {
     let {
       children
     } = props
+    let extraState = this.getExtraState()
+
     if (first && typeof children === 'function') {
-      let extraState = this.getExtraState()
 
       children = children(extraState) // add a third
     }
@@ -237,8 +240,10 @@ class Bound extends Component {
 
   render () {
     const {
-      to
+      to,
+      onChange
     } = this.props
+    this.stateOnChange = onChange
 
     return this.renderAndHookChildren(this.props, to, true)
   }

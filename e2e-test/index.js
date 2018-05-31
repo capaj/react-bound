@@ -12,6 +12,7 @@ const state = observable({
   second: '',
   third: '',
   wrapped: 'wrapped value',
+  wrappedCheck: false,
   color: '#5c1111',
   gender: null, // radio btns
   number: 10,
@@ -23,7 +24,16 @@ const state = observable({
   aSelect: 'value2'
 })
 window.state = state
-const WrappedInput = ({ bound, onChange, value }) => {
+
+const WrappedInputCheckbox = ({ bound, onChange, value }) => {
+  return (
+    <div>
+      Wrapped checkbox
+      <input type="checkbox" onChange={onChange} checked={value} />
+    </div>
+  )
+}
+const WrappedInputText = ({ bound, onChange, value }) => {
   return (
     <div>
       Wrapped input
@@ -120,7 +130,8 @@ class Test extends Component {
         </Bound>
         <Bound to={state}>
           <textarea name='third' />
-          <WrappedInput bound='wrapped' />
+          <WrappedInputText bound='wrapped' />
+          <WrappedInputCheckbox bound='wrappedCheck' />
         </Bound>
         <br />
         <br />
