@@ -118,13 +118,21 @@ By using function a direct child, you can get `dirty`, `reset` and `set` form ut
 
 ```javascript
 <Bound to={state}>
-  {({dirty, reset, set}) => {
+  {({dirty, reset, set, setClean}) => {
     return <div>
       <textarea name='a' />
       <textarea name='b' />
       <span>has been touched: {dirty}</span>
-      <button onClick={reset}>
+      <button onClick={() => {
+        reset()
+      }}>  
         reset form
+      </button>
+      <button onClick={() => {
+        const savedState = await someApiCall()
+        setClean(savedState)  //set the clean state to a new value-when you've saved your form on backend for example
+      }}>  
+        save form
       </button>
       <button onClick={() => {
         set('a', 1)  // sets a value to model programatically-same as doin a = 1 but "dirty" gets switched

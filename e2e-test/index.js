@@ -29,7 +29,7 @@ const WrappedInputCheckbox = ({ bound, onChange, value }) => {
   return (
     <div>
       Wrapped checkbox
-      <input type="checkbox" onChange={onChange} checked={value} />
+      <input type='checkbox' onChange={onChange} checked={value} />
     </div>
   )
 }
@@ -136,7 +136,7 @@ class Test extends Component {
         <br />
         <br />
         <Bound to={state}>
-          {({ dirty, reset, set }) => {
+          {({ dirty, reset, set, setClean }) => {
             return <div>
               <select name='aSelect'>
                 <option value='value1'>Value 1</option>
@@ -151,7 +151,16 @@ class Test extends Component {
               </button>
               <button
                 onClick={() => {
+                  setClean(state)
+                }}
+              >
+          set current as clean
+              </button>
+              <button
+                onClick={() => {
+
                   set('second', 'aaa')
+
                 }}
               >
           set test

@@ -51,14 +51,21 @@ const fromModelToInput = (inputType, value) => {
 }
 
 class Bound extends Component {
-  getExtraState() {
-
+  getExtraState () {
     const {
       to
     } = this.props
     let extraState = formsExtraState.get(to)
     if (!extraState) {
       extraState = {
+        setClean: (cleanState) => {
+          if (cleanState) {
+            Object.assign(extraState.cleanState, cleanState)
+          } else {
+            Object.assign(extraState.cleanState, to)
+          }
+          extraState.dirty = false
+        },
         reset: () => {
           Object.assign(to, extraState.cleanState)
           Object.keys(to).forEach((key) => {
@@ -229,7 +236,6 @@ class Bound extends Component {
     let extraState = this.getExtraState()
 
     if (first && typeof children === 'function') {
-
       children = children(extraState) // add a third
     }
     if (Array.isArray(children)) {
