@@ -158,9 +158,7 @@ class Test extends Component {
               </button>
               <button
                 onClick={() => {
-
                   set('second', 'aaa')
-
                 }}
               >
           set test

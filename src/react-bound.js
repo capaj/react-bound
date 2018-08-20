@@ -65,6 +65,7 @@ class Bound extends Component {
             Object.assign(extraState.cleanState, to)
           }
           extraState.dirty = false
+          extraState.instances.forEach((instance) => instance.forceUpdate())
         },
         reset: () => {
           Object.assign(to, extraState.cleanState)
