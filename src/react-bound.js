@@ -1,18 +1,11 @@
-import React, {
-  Component
-} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import cloneDeep from 'lodash.clonedeep'
 
-import {
-  isObservable,
-  toJS
-} from 'mobx'
-import {
-  observer
-} from 'mobx-react'
+import { isObservable, toJS } from 'mobx'
+import { observer } from 'mobx-react'
 import dateformat from 'dateformat'
 
 const nodeTypes = ['input', 'select', 'textarea']
@@ -51,46 +44,47 @@ const fromModelToInput = (inputType, value) => {
 }
 
 class Bound extends Component {
-  getExtraState () {
-    const {
-      to
-    } = this.props
+  getExtraState() {
+    const { to } = this.props
     let extraState = formsExtraState.get(to)
     if (!extraState) {
       extraState = {
-        setClean: (cleanState) => {
+        setClean(cleanState) {
           if (cleanState) {
             Object.assign(extraState.cleanState, cleanState)
           } else {
             Object.assign(extraState.cleanState, to)
           }
           extraState.dirty = false
-          extraState.instances.forEach((instance) => instance.forceUpdate())
+          extraState.forceUpdateAll()
         },
-        reset: () => {
+        reset() {
           Object.assign(to, extraState.cleanState)
-          Object.keys(to).forEach((key) => {
+          Object.keys(to).forEach(key => {
             if (!extraState.cleanState.hasOwnProperty(key)) {
               delete to[key]
             }
           })
           extraState.dirty = false
-          extraState.instances.forEach((instance) => instance.forceUpdate())
+          extraState.forceUpdateAll()
         },
         /*
           @path string
           @value Any
         */
-        set: (...args) => {
+        set(...args) {
           if (!extraState.dirty) {
             extraState.dirty = true
-            extraState.instances.forEach((instance) => instance.forceUpdate())
           }
 
           set(to, ...args)
+          extraState.forceUpdateAll()
         },
         dirty: false,
-        instances: [this]
+        instances: [this],
+        forceUpdateAll() {
+          this.instances.forEach(instance => instance.forceUpdate())
+        }
       }
       if (isObservable(to)) {
         extraState.cleanState = toJS(to)
@@ -98,25 +92,25 @@ class Bound extends Component {
         extraState.cleanState = cloneDeep(to)
       }
       formsExtraState.set(to, extraState)
-    } else {
-      extraState.instances.push(this)
     }
     return extraState
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     const extraState = formsExtraState.get(this.props.to)
     extraState.instances.splice(extraState.instances.indexOf(this), 1)
   }
 
-  renderAndHookChildren (props, state, first) {
+  componentWillMount() {
+    const extraState = this.getExtraState()
+    extraState.instances.push(this)
+  }
+
+  renderAndHookChildren(props, state, first) {
     const hookNode = node => {
       if (!node) {
         return null
       }
-      const {
-        props,
-        type
-      } = node
+      const { props, type } = node
 
       const hookOnChangeAndClone = (value, statePropPath) => {
         const originalOnChange = props.onChange
@@ -126,9 +120,7 @@ class Bound extends Component {
             let newValue = newValueOrEvent
             if (newValueOrEvent && typeof newValueOrEvent.target === 'object') {
               // this is a DOM event proxy
-              const {
-                target
-              } = newValueOrEvent
+              const { target } = newValueOrEvent
 
               if (target.type === 'checkbox') {
                 newValue = target.checked
@@ -144,13 +136,14 @@ class Bound extends Component {
 
               if (!extraState.dirty) {
                 extraState.dirty = true
-                extraState.instances.forEach((instance) => instance.forceUpdate())
               }
 
               set(state, statePropPath, castedValue)
+              extraState.forceUpdateAll()
               props.onChange &&
                 props.onChange(state, statePropPath, castedValue)
-              this.stateOnChange && this.stateOnChange(state, statePropPath, castedValue)
+              this.stateOnChange &&
+                this.stateOnChange(state, statePropPath, castedValue)
             }
             if (!originalOnChange) {
               return setValue()
@@ -193,7 +186,11 @@ class Bound extends Component {
           return node
         }
         if (props.type !== 'radio' && props.hasOwnProperty('value')) {
-          throw new Error(`value prop cannot be set for bound elements, yet it is value="${props.value}" for ${type}`)
+          throw new Error(
+            `value prop cannot be set for bound elements, yet it is value="${
+              props.value
+            }" for ${type}`
+          )
         }
         const value = get(state, props.name)
 
@@ -231,9 +228,7 @@ class Bound extends Component {
         return node
       }
     }
-    let {
-      children
-    } = props
+    let { children } = props
     let extraState = this.getExtraState()
 
     if (first && typeof children === 'function') {
@@ -245,11 +240,8 @@ class Bound extends Component {
     return hookNode(children)
   }
 
-  render () {
-    const {
-      to,
-      onChange
-    } = this.props
+  render() {
+    const { to, onChange } = this.props
     this.stateOnChange = onChange
 
     return this.renderAndHookChildren(this.props, to, true)

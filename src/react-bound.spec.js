@@ -1,10 +1,20 @@
 import Bound from './react-bound'
-import test from 'ava'
+import 'jest'
 import React from 'react'
+import Enzyme from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
+import { mount } from 'enzyme'
 
-test('renders', t => {
-  t.snapshot(<Bound to={{}}>
-    <textarea name='formA.unicornInput' />
-    <textarea name='formB.unicornInput' />
-  </Bound>)
+Enzyme.configure({ adapter: new Adapter() })
+
+describe('react-bound', () => {
+  it('renders', async () => {
+    const mounted = mount(
+      <Bound to={{}}>
+        <textarea name="formA.unicornInput" />
+        <textarea name="formB.unicornInput" />
+      </Bound>
+    )
+    expect(mounted.html()).toMatchSnapshot()
+  })
 })
