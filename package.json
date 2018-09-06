@@ -1,6 +1,6 @@
 {
   "name": "react-bound",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "a HOC for data-binding an input to a model-it can be a POJO or a mobx observable",
   "main": "dist/react-bound.cjs.js",
   "module": "dist/react-bound.es.js",
@@ -65,6 +65,7 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.1",
+    "lodash.omit": "^4.5.0",
     "lodash.set": "^4.3.2",
     "prop-types": "^15.6.2"
   },

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import get from 'lodash.get'
 import set from 'lodash.set'
+import omit from 'lodash.omit'
 import cloneDeep from 'lodash.clonedeep'
 
 import { isObservable, toJS } from 'mobx'
@@ -221,13 +222,20 @@ class Bound extends Component {
           }
 
           if (ref) {
+            const propsDuplicate = omit(props, 'ref')
+
             if (typeof ref === 'function') {
-              props.ref = function(n) {
+              propsDuplicate.ref = function(n) {
                 ref(n)
               }
             } else if (typeof ref === 'object') {
-              props.ref = ref
+              propsDuplicate.ref = ref
             }
+            return React.createElement(
+              type,
+              propsDuplicate,
+              this.renderAndHookChildren(propsDuplicate, state)
+            )
           }
 
           return React.createElement(
