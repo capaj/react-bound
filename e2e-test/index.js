@@ -44,6 +44,8 @@ const WrappedInputText = ({ bound, onChange, value }) => {
   )
 }
 
+const refTest = React.createRef()
+window.refTest = refTest
 class Test extends Component {
   render() {
     return (
@@ -131,7 +133,12 @@ class Test extends Component {
           </form>
         </Bound>
         <Bound to={state}>
-          <textarea name="third" />
+          <textarea
+            name="third"
+            ref={el => {
+              console.log('el', el)
+            }}
+          />
           <WrappedInputText bound="wrapped" />
           <WrappedInputCheckbox bound="wrappedCheck" />
         </Bound>
@@ -140,8 +147,14 @@ class Test extends Component {
         <Bound to={state}>
           {({ dirty, reset, set, setClean }) => {
             return (
-              <div>
-                <select name="aSelect">
+              <div ref={refTest}>
+                <select
+                  name="aSelect"
+                  className="aaa"
+                  ref={el => {
+                    console.log('elem', el)
+                  }}
+                >
                   <option value="value1">Value 1</option>
                   <option value="value2">Value 2</option>
                   <option value="value3">Value 3</option>

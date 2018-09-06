@@ -110,7 +110,7 @@ class Bound extends Component {
       if (!node) {
         return null
       }
-      const { props, type } = node
+      const { props, type, ref } = node
 
       const hookOnChangeAndClone = (value, statePropPath) => {
         const originalOnChange = props.onChange
@@ -170,6 +170,7 @@ class Bound extends Component {
         }
 
         const clonedElement = React.cloneElement(node, cloneProps)
+
         return clonedElement
       }
 
@@ -218,13 +219,23 @@ class Bound extends Component {
 
             return hookOnChangeAndClone(value, props.bound)
           }
+
+          if (ref) {
+            if (typeof ref === 'function') {
+              props.ref = function(n) {
+                ref(n)
+              }
+            } else if (typeof ref === 'object') {
+              props.ref = ref
+            }
+          }
+
           return React.createElement(
             type,
             props,
             this.renderAndHookChildren(props, state)
           )
         }
-
         return node
       }
     }
@@ -237,6 +248,7 @@ class Bound extends Component {
     if (Array.isArray(children)) {
       return React.Children.map(children, hookNode)
     }
+
     return hookNode(children)
   }
 
