@@ -74,12 +74,16 @@ class Bound extends Component {
           @value Any
         */
         set(...args) {
-          if (!extraState.dirty) {
-            extraState.dirty = true
-          }
+          const currentValue = get(to, args[0])
+          if (currentValue !== args[1]) {
+            if (!extraState.dirty) {
+              extraState.dirty = true
+            }
 
-          set(to, ...args)
-          extraState.forceUpdateAll()
+            set(to, ...args)
+            extraState.forceUpdateAll()
+          }
+          // if the value is the same, we don't do anything
         },
         dirty: false,
         instances: [this],

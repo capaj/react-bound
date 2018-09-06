@@ -1,4 +1,5 @@
 # react-bound
+
 a react utility component for binding inputs to a model. Model can be a POJO or a mobx observable.
 It does the same thing as https://facebook.github.io/react/docs/two-way-binding-helpers.html. Links the value from your model to your inputs so that you don't have to wire up every single input manually.
 With react-bound you can forget what property of an `event.target` carries the actual value. No matter if it's a checkbox, radio or a file input. All of the DOM api quirks are hardcoded in react-bound and you get the actual values laid out into your model.
@@ -32,7 +33,9 @@ number
 ```
 
 ## form extra API
+
 Currently you get an object available for your children callback with these props:
+
 - `dirty` boolean flag indicating if any of the bound inputs had any change event
 - `reset` this function reverts your state object to the state it was in when `<Bound>` rendered first
 - `set` this function sets a property on your state to the supplied value and changes dirty from false to true
@@ -50,13 +53,15 @@ To run a showcase, use: `npm run showcase`
 ## Usage
 
 You can bound a single input:
+
 ```javascript
 <Bound to={state}>
-  <textarea name='unicornInput' />
+  <textarea name="unicornInput" />
 </Bound>
 ```
 
 Or a whole form:
+
 ```javascript
 const state = observable({
   first: '',
@@ -82,6 +87,7 @@ const state = observable({
    <form>
 </Bound>
 ```
+
 All you have to do is match the name of input to the property in your state. The React element tree is recursively traversed, so even if you hide the input 20 layers deep, it will still hook it up.
 
 You can bind multiple forms inside a single `Bound` element, but I'd advise you to at least namespace your inputs, so that your model remains somewhat tidy.
@@ -109,11 +115,12 @@ So a lot of inputs you use are wrapped in a react component. For example [react-
 
 ```javascript
 <Bound to={state}>
-  <Select bound='unicornInput'/>
+  <Select bound="unicornInput" />
 </Bound>
 ```
 
 ## Children as function
+
 By using function a direct child, you can get `dirty`, `reset` and `set` form utils. These utils are backed by a Weakmap-so if you have multiple <Bound/> elements where `to` is the same, `dirty` will be changed to true if any of the two forms is touched.
 
 ```javascript
@@ -125,13 +132,13 @@ By using function a direct child, you can get `dirty`, `reset` and `set` form ut
       <span>has been touched: {dirty}</span>
       <button onClick={() => {
         reset()
-      }}>  
+      }}>
         reset form
       </button>
       <button onClick={() => {
         const savedState = await someApiCall()
         setClean(savedState)  //set the clean state to a new value-when you've saved your form on backend for example
-      }}>  
+      }}>
         save form
       </button>
       <button onClick={() => {
@@ -147,23 +154,27 @@ By using function a direct child, you can get `dirty`, `reset` and `set` form ut
 ## Props
 
 ### to
+
 a reference to s state object
 
 ### onChange
+
 is called for any change in the state object. Callback is called with 3 params: state, statePropPath, castedValue
 
 ### TBD
+
 Sometimes you'd get a react warning when you do this-if you do the wrapped element is forwarding the bound prop to the child. If you can't make sure that the prop `bound` is not passed, you'll want to use `<BindElement>` like this to avoid getting the error:
 
 ```javascript
 <Bound to={state}>
   <BindElement>
-    <Select name='unicornInput'/>
+    <Select name="unicornInput" />
   </BindElement>
 </Bound>
 ```
 
 ## With mobx
+
 Make sure you initialize your fields, otherwise an error is thrown if your state is mobx observable.
 
 ```javascript
